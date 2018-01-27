@@ -1,13 +1,19 @@
 import React, { Component } from 'react'
 import { ImagePicker } from 'expo'
-import { View,  Button,  ToastAndroid } from 'react-native'
-//https://viblo.asia/p/how-to-upload-image-from-library-or-camera-with-crna-Qbq5QgBzZD8
-//https://docs.expo.io/versions/latest/sdk/imagepicker.html
-export default class HomeScreen extends Component{
+import { View,  Button,  ToastAndroid , Text} from 'react-native'
+import { StackNavigator,} from 'react-navigation';
+
+class HomeScreen extends Component{
+    static navigationOptions = {
+      'header': null
+    }
+
     constructor(props) {
         super(props)
     }
-      takePhoto = async () => {
+      takePhoto = async () => {        
+        //https://viblo.asia/p/how-to-upload-image-from-library-or-camera-with-crna-Qbq5QgBzZD8
+        //https://docs.expo.io/versions/latest/sdk/imagepicker.html
         let pickerResult = await ImagePicker.launchCameraAsync({
           exif: false,
           allowsEditing: true,
@@ -33,7 +39,9 @@ export default class HomeScreen extends Component{
      }
      
      handleUploadPhoto = pickerResult => {
-        ToastAndroid.show(pickerResult.width.toString(), ToastAndroid.SHORT);
+        //submit to server here, maybe add loading screen
+        this.props.navigation.navigate('Result', {'pickerResult': pickerResult})
+        //ToastAndroid.show(pickerResult.width.toString(), ToastAndroid.SHORT);
   }
      
     render() {
@@ -49,7 +57,35 @@ export default class HomeScreen extends Component{
                 />
             </View>)
         
-    }
-    
+    }    
 }
-     
+
+class ResultScreen extends Component{
+  static navigationOptions = {
+    'header': null
+  }
+
+  constructor(props){
+    super(props);
+  }
+
+  render(){
+    const {state} = this.props.navigation;
+    return(<View> 
+      <Text> {state.params.pickerResult.width.toString()} </Text>
+      <Text> {state.params.pickerResult.height.toString()} </Text>
+      </View>);
+  }
+}
+
+const App = StackNavigator({
+  Home: { screen: HomeScreen },
+  Result: { screen: ResultScreen },
+});
+
+export default class AmazonOracle extends Component{
+  render(){
+    return(
+    <App></App>);
+  }
+}
