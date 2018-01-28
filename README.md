@@ -25,6 +25,5 @@ The front-end of the app is built with React-Native. User will upload a photo to
 ### Machine Learning
 
 ## Examples
-![Home Screen](/react-native/AmazonOracle/img/Screenshots/home.png)
-![Predicted Info](/react-native/AmazonOracle/img/Screenshots/bag1.png)
-![Similar Items](/react-native/AmazonOracle/img/Screenshots/bag2.png)
+Home > Predicted Infor > Similar Items
+![](/react-native/AmazonOracle/img/Screenshots/example.png)
