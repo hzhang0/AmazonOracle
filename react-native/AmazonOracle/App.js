@@ -148,26 +148,39 @@ class CoolText extends Component{
 class SimilarItem extends Component{
     constructor(props){
         super(props);
+        this._open.bind(this);
     }
+    _open(link){
+        if(this.props.exists){
+            Linking.openURL(this.props.link)
+        }
+    }
+
     render(){
         var title = this.props.title;
         var txtLimit = 30;
         if(title.length > txtLimit){
             title = title.substring(0,txtLimit) + "...";
         }
+        var opacity = this.props.exists ? 1 : 0.25;
         return(
-            <View style={{flexDirection:"row", margin:10}}>
+            <View style={{flexDirection:"row", margin:5, padding:5}}>
                 <View >
                     <Avatar
                         large
                         rounded
                         source={{uri:this.props.uri}}
-                        onPress={() => Linking.openURL(this.props.link)}
+                        onPress={() => this._open(this.props.link)}
                     />
                 </View>
                 <View style={{flexDirection:"column", justifyContent:"space-between", marginLeft:10}}>
-                    <Text style={{marginTop:10, fontSize:14}}>{title}</Text>
-                    <Text style={{marginBottom:10, color:"darkorange", fontSize:18}}>{this.props.price}</Text>
+                    {this.props.exists &&
+                        <Text style={{marginTop:10, fontSize:14, color:"rgba(0,0,0,"+opacity+")"}}>{title}</Text>
+                    }
+                    {!this.props.exists &&
+                        <Text style={{marginTop:10, fontSize:14, color:"rgba(0,0,0,"+opacity+")", textDecorationLine: 'line-through'}}>{title}</Text>
+                    }
+                    <Text style={{marginBottom:10, fontSize:18, color:"rgba(226, 146, 18, "+opacity+")"}}>{this.props.price + (this.props.exists?"":" | No longer exists")}</Text>
                 </View>
             </View>
         );
@@ -197,6 +210,7 @@ class ResultScreen extends Component{
             </View>
             <View style={{flex:2, justifyContent:"center"}}>
                 <CoolText title="Predicted Price" value={"$"+result.predicted_price} color="darkorange"/>
+                <CoolText title="Average Price" value={"$"+result.predicted_price_avg} color="darkorange"/>
                 <CoolText title="Predicted Category" value={result.predicted_cat}/>
             </View>
             <Divider style={{ backgroundColor: 'grey', margin:10}} />
@@ -207,7 +221,7 @@ class ResultScreen extends Component{
                 <FlatList
                     data={result.similar_items}
                     renderItem={({item}) =>
-                        <SimilarItem title={item.title} uri={item.image_url} price={"$"+item.price} link={item.asin}/>
+                        <SimilarItem title={item.title} uri={item.image_url} price={"$"+item.price} link={item.asin} exists={item.exists}/>
                     }
                 />
             </View>
