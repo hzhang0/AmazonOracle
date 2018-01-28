@@ -12,12 +12,12 @@ If you are looking at an item and have no idea what it is, you can use this app 
 
 ## Implementation
 ### Stack
-* React=Native
+* React-Native
 * Django
 * Python 3
 * Machine Learning
 
-### React=Native
+### React-Native
 The front-end of the app is built with React-Native. User will upload a photo to our server endpoint through the app with a POST request, then predicted information will be returned for display in the app.
 
 ### Django
@@ -25,3 +25,6 @@ The front-end of the app is built with React-Native. User will upload a photo to
 ### Machine Learning
 
 ## Examples
+![Home Screen](/react-native/AmazonOracle/img/Screenshots/home.png)
+![Predicted Info](/react-native/AmazonOracle/img/Screenshots/bag1.png)
+![Similar Items](/react-native/AmazonOracle/img/Screenshots/bag2.png)
