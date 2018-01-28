@@ -2,7 +2,7 @@
   "expo": {
     "sdkVersion": "25.0.0",
     "name": "AmazonOracle",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "android": {
       "package": "com.deltahacks.AmazonOracle"
     }
