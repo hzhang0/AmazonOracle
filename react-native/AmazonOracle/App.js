@@ -151,7 +151,7 @@ class SimilarItem extends Component{
         this._open.bind(this);
     }
     _open(link){
-        if(this.props.exists){
+        if(this.props.exists || true){
             Linking.openURL(this.props.link)
         }
     }
