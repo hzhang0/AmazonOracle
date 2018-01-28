@@ -59,7 +59,7 @@ class HomeScreen extends Component{
             ).then((resp) => {
                 // CALLBACK
                 // ToastAndroid.show("good: "+JSON.stringify(resp), ToastAndroid.SHORT);
-                this.props.navigation.navigate('Result', {'pickerResult': pickerResult, 'result':resp, 'Home':this});
+                this.props.navigation.navigate('Result', {'pickerResult': pickerResult, 'result':resp});
                 setTimeout(() => this._reset(), 500);
             });
         } catch (error){
@@ -216,32 +216,13 @@ class ResultScreen extends Component{
   }
 }
 
-class Loading extends Component{
-      static navigationOptions = {
-            'header': null
-      }
-
-      constructor(props){
-          super(props);
-      }
-
-      render(){
-            return(
-                <View style={{flex:1, justifyContent:"center"}}>
-                    <ActivityIndicator size="large" color="grey" />
-                </View>
-            );
-      }
-}
-
 const styles = StyleSheet.create({
     center: {textAlign:"center"}
 });
 
 const App = StackNavigator({
     Home: { screen: HomeScreen },
-    Result: { screen: ResultScreen },
-    Loading: { screen: Loading }
+    Result: { screen: ResultScreen }
 });
 
 export default class AmazonOracle extends Component{
