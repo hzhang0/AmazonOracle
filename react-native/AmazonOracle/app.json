@@ -5,6 +5,7 @@
     "version": "1.0.3",
     "android": {
       "package": "com.deltahacks.AmazonOracle"
-    }
+    },
+    "icon":"./img/icon.png"
   }
 }
