@@ -11,6 +11,9 @@ class HomeScreen extends Component{
 
     constructor(props) {
         super(props)
+        this.state = {isLoading: false}
+        this._render.bind(this)
+        this._reset.bind(this)
     }
       takePhoto = async () => {
         //https://viblo.asia/p/how-to-upload-image-from-library-or-camera-with-crna-Qbq5QgBzZD8
@@ -42,7 +45,7 @@ class HomeScreen extends Component{
      handleUploadPhoto = pickerResult => {
         //submit to server here, maybe add loading screen
 
-        this.props.navigation.navigate('Loading');
+        this.setState({isLoading:true});
         try{
             // POST
             fetch('http://n1njacyb.org/endpoint/', {
@@ -56,49 +59,64 @@ class HomeScreen extends Component{
             ).then((resp) => {
                 // CALLBACK
                 // ToastAndroid.show("good: "+JSON.stringify(resp), ToastAndroid.SHORT);
-                this.props.navigation.navigate('Result', {'pickerResult': pickerResult, 'result':resp});
+                this.props.navigation.navigate('Result', {'pickerResult': pickerResult, 'result':resp, 'Home':this});
+                setTimeout(() => this._reset(), 500);
             });
-
-
         } catch (error){
-            ToastAndroid.show("bad", ToastAndroid.SHORT);
+            this.setState({isLoading:false});
+            ToastAndroid.show("POST Error", ToastAndroid.SHORT);
             this.props.navigation.navigate('Home');
         }
         // this.props.navigation.navigate('Result', {'pickerResult': pickerResult});
     }
-
+    _reset(){
+        this.setState({isLoading:false});
+    }
+    _render(){
+        if(!this.state.isLoading){
+            return(
+                <View style={{marginTop:20, flex:1}}>
+                    <View style={{flex:1, justifyContent:"center", padding:30}}>
+                        <Text h1 style={styles.center}>
+                            Amazon Oracle
+                        </Text>
+                        <Text style={styles.center}>
+                            Price check with a picture
+                        </Text>
+                    </View>
+                    <View style={{flex:1}}>
+                        <View style={{margin:10}}>
+                            <Button
+                                large
+                                backgroundColor="lightseagreen"
+                                icon={{name: 'camera-alt'}}
+                                onPress={this.takePhoto}
+                                title={'Take a photo'}
+                            />
+                        </View>
+                        <View style={{margin:10}}>
+                           <Button
+                                large
+                                backgroundColor="teal"
+                                icon={{name: 'collections'}}
+                                onPress={this.choosePhoto}
+                                title={'Choose a photo'}
+                            />
+                        </View>
+                    </View>
+                </View>
+            )
+        }else{
+            return(
+                <View style={{flex:1, justifyContent:"center"}}>
+                    <ActivityIndicator size="large" color="grey" />
+                </View>
+            )
+        }
+    }
     render() {
         return(
-            <View style={{marginTop:20, flex:1}}>
-                <View style={{flex:1, justifyContent:"center", padding:30}}>
-                    <Text h1 style={styles.center}>
-                        Amazon Oracle
-                    </Text>
-                    <Text style={styles.center}>
-                        Price check your items by taking a picture
-                    </Text>
-                </View>
-                <View style={{flex:1}}>
-                    <View style={{margin:10}}>
-                        <Button
-                            large
-                            backgroundColor="lightseagreen"
-                            icon={{name: 'compass', type: 'font-awesome'}}
-                            onPress={this.takePhoto}
-                            title={'Take a photo'}
-                        />
-                    </View>
-                    <View style={{margin:10}}>
-                       <Button
-                            large
-                            backgroundColor="teal"
-                            icon={{name: 'code', type: 'font-awesome'}}
-                            onPress={this.choosePhoto}
-                            title={'Choose a photo'}
-                        />
-                    </View>
-                </View>
-            </View>
+            this._render()
         )
 
     }
@@ -163,34 +181,15 @@ class ResultScreen extends Component{
 
   constructor(props){
     super(props);
+    // this.props.navigation.state.params.Home.setState({isLoading:false});
   }
 
   render(){
     const {state} = this.props.navigation;
-    // const result = {
-    //     predicted_price:12,
-    //     predicted_cat: "Car",
-    //     similar_items:[
-    //         {
-    //             key:0,
-    //             title:"Baka",
-    //             asin:"http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/sign-check-icon.png",
-    //             link:"https://google.ca",
-    //             price:12
-    //         },
-    //         {
-    //             key:1,
-    //             title:"OHH ",
-    //             asin:"http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/sign-check-icon.png",
-    //             link:"https://youtube.ca",
-    //             price:12
-    //         }
-    //     ]
-    // }
     const result = this.props.navigation.state.params.result;
     return(
         <ScrollView style={{flex:1, paddingTop:0}}>
-            <View style={{alignItems:"center"}}>
+            <View style={{alignItems:"center", marginBottom:10}}>
                 <Image
                     style={{width:500, height:300}}
                     source={{uri: state.params.pickerResult.uri}}
@@ -200,7 +199,7 @@ class ResultScreen extends Component{
                 <CoolText title="Predicted Price" value={"$"+result.predicted_price} color="darkorange"/>
                 <CoolText title="Predicted Category" value={result.predicted_cat}/>
             </View>
-            <Divider style={{ backgroundColor: 'grey' }} />
+            <Divider style={{ backgroundColor: 'grey', margin:10}} />
             <View style={{flex:1, padding:10}}>
                 <Text style={{textAlign:"center", color:"grey", fontSize:20}}>
                     Similar Items
@@ -241,7 +240,7 @@ const styles = StyleSheet.create({
 
 const App = StackNavigator({
     Home: { screen: HomeScreen },
-        Result: { screen: ResultScreen },
+    Result: { screen: ResultScreen },
     Loading: { screen: Loading }
 });
 
